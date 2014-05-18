@@ -6,5 +6,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>RPSMetricsProvider</module>
+  	<module>RPSPayloadGenerator</module>
+  	<module>RPSPredictor</module>
   </modules>
 </project>

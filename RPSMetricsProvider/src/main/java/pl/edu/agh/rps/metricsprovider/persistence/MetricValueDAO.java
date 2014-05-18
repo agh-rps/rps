@@ -19,10 +19,11 @@ public class MetricValueDAO {
 		
 		@SuppressWarnings("unchecked")
 		List<MetricValue> values = session.createCriteria(MetricValue.class)
-								   .add(Restrictions.eq("system_id", system.getSystemId()))
-								   .add(Restrictions.eq("resource_id", resource.getResourceId()))
+								   .add(Restrictions.eq("system", system.getSystemId()))
+								   .add(Restrictions.eq("resource", resource.getResourceId()))
 								   .add(Restrictions.between("timestamp", beginTimestamp, endTimestamp))
 								   .list();
+		session.close();
 		return values;
 	}
 	
@@ -35,7 +36,7 @@ public class MetricValueDAO {
 										  .addOrder(Order.desc("timestamp"))
 										  .setMaxResults(amount)
 										  .list();
-		
+		session.close();
 		return values;
 		
 	}

@@ -15,10 +15,20 @@ public class ResourceDAO {
 		
 		@SuppressWarnings("unchecked")
 		List<Resource> resources = session.createCriteria(Resource.class)
-								   .add(Restrictions.eq("system_id", system.getSystemId()))
+								   .add(Restrictions.eq("system", system.getSystemId()))
 								   .list();
 		
+		session.close();
 		return resources;
+	}
+	
+	public static void registerResource(Resource resource) {
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		session.beginTransaction();
+		session.save(resource);
+		session.update(resource.getSystem());
+		session.getTransaction().commit();
+		session.close();
 	}
 	
 }

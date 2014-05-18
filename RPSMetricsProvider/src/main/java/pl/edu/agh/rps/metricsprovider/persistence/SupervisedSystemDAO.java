@@ -14,7 +14,16 @@ public class SupervisedSystemDAO {
 		@SuppressWarnings("unchecked")
 		List<SupervisedSystem> systems = session.createCriteria(SupervisedSystem.class).list();
 		
+		session.close();
 		return systems;
+	}
+	
+	public static void registerSystem(SupervisedSystem system) {
+		Session session = HibernateUtils.getSessionFactory().openSession();
+		session.beginTransaction();
+		session.save(system);
+		session.getTransaction().commit();
+		session.close();
 	}
 	
 }

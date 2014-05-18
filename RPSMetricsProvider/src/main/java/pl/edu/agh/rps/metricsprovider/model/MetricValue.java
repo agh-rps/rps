@@ -20,7 +20,7 @@ public class MetricValue {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="value_id")
-	private long valueId;
+	private Long valueId;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
@@ -33,7 +33,7 @@ public class MetricValue {
 	@JoinColumn(name="resource_id")
 	private Resource resource;
 
-	private double value;
+	private Double value;
 	
 	public MetricValue() {};
 	

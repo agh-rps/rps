@@ -1,5 +1,6 @@
 package pl.edu.agh.rps.metricsprovider.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -18,12 +19,14 @@ public class SupervisedSystem {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="system_id")
-	private long systemId;
+	private Long systemId;
 	
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="system")
 	private List<Resource> resources;
 
-	public SupervisedSystem() {};
+	public SupervisedSystem() {
+		resources = new LinkedList<Resource>();
+	};
 	
 	public long getSystemId() {
 		return systemId;

@@ -26,7 +26,7 @@ public class Resource {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="resource_id")
-	private long resourceId;
+	private Long resourceId;
 	
 	@ManyToOne
 	@JoinColumn(name="system_id")
@@ -40,7 +40,7 @@ public class Resource {
 	static {
 		comparator = new Comparator<MetricValue>() {
 			public int compare(MetricValue o1, MetricValue o2) {
-				return o1.getTimestamp().before(o2.getTimestamp()) ? 1 : -1;
+				return o1.getTimestamp().before(o2.getTimestamp()) ? -1 : 1;
 			}
 		};
 	}
@@ -86,7 +86,14 @@ public class Resource {
 	}
 	
 	public void initializeBuffer() {
-		valuesBuffer = MetricValueDAO.getRecentValues(system, this, Properties.VALUES_BUFFER_SIZE);
+		valuesBuffer = MetricValueDAO.getRecentValues(system, this, Properties.VALUES_BUFFER_SIZE / 2);
+	}
+	
+	public void addValue(MetricValue value) {
+		valuesBuffer.add(0, value);
+		if (valuesBuffer.size() > Properties.VALUES_BUFFER_SIZE) {
+			// TODO
+		}
 	}
 	
 }
