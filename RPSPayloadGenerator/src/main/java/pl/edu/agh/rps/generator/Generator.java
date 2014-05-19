@@ -28,6 +28,7 @@ public class Generator implements Runnable {
 		MetricValue value;
 		Random rand = new Random();
 		while (mode != GenerationMode.SHUTDOWN) {
+			
 			switch (mode) {
 			case RANDOM:
 				value = new MetricValue(system, resource, new Date(), rand.nextDouble() * (maxValue-minValue) + minValue);
