@@ -25,6 +25,10 @@ public class Generator extends Thread {
 		resources = new LinkedList<GeneratedResource>();
 	}
 	
+	public List<GeneratedResource> getGeneratedResources() {
+		return resources;
+	}
+	
 	public void shutdown() {
 		this.isRunning = false;
 	}
@@ -39,6 +43,16 @@ public class Generator extends Thread {
 		
 		GeneratedResource generated = new GeneratedResource(resource);
 		generated.setMode(mode);
+		resources.add(generated);
+	}
+	
+	public void addRelatedGeneratedResource(List<GeneratedResource> related) { 
+		Resource resource = new Resource(system);
+		Provider.registerResource(resource);
+		
+		GeneratedResource generated = new GeneratedResource(resource);
+		generated.setMode(GenerationMode.RELATED);
+		generated.addRelated(related);
 		resources.add(generated);
 	}
 	
@@ -59,7 +73,7 @@ public class Generator extends Thread {
 			}
 			
 			try {
-				Thread.sleep(500);
+				Thread.sleep(150);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

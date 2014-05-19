@@ -37,6 +37,10 @@ public class Test {
 				gen1.addGeneratedResource(GenerationMode.LINEAR);
 			} else if ("ADDRAN".equals(line)) {
 				gen1.addGeneratedResource(GenerationMode.RANDOM);
+			} else if ("ADDSIN".equals(line)) {
+				gen1.addGeneratedResource(GenerationMode.SINUSOID);
+			} else if ("ADDREL".equals(line)) {
+				gen1.addRelatedGeneratedResource(gen1.getGeneratedResources());
 			} else {
 				System.out.println("Invalid command.");
 			}
@@ -46,22 +50,5 @@ public class Test {
 	
 	}
 	
-	public static void showInfo() {
-		systems = Provider.getAllSystems();
-		
-		System.out.println("timestamp: " + new Date());
-		System.out.println("registered systems: " + systems.size());
-		for (SupervisedSystem s : systems) {
-			System.out.println("system " + s.getSystemId());
-			System.out.println("\tregistered resources: " + s.getResources().size());
-			for (Resource res : s.getResources()) {
-				System.out.print("\t\t" + res.getResourceId() + ": {");
-				for (MetricValue value : res.getMetricValues(beginTimestamp, new Date())) {
-					System.out.print(value.getValue() + " ");
-				}
-				System.out.println("}");
-			}
-		}
-	}
 	
 }
