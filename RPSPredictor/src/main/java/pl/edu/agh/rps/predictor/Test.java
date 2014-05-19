@@ -26,6 +26,8 @@ public class Test {
 	
 		String line;
 		Scanner scanner = new Scanner(System.in);
+		System.out.println("RANDOM/INFO");
+		System.out.println(">> ");
 		while (!(line = scanner.nextLine()).equals("quit")) {
 		
 			if ("RANDOM".equals(line)) {
