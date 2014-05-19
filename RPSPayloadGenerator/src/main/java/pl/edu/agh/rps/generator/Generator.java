@@ -24,29 +24,6 @@ public class Generator implements Runnable {
 	
 	public void run() {
 		initialize();
-		System.out.println("Generator is running in random values mode. Choose generation mode: ");
-		System.out.println("1. Random metric values");
-		//System.out.println("2. ");
-		System.out.print(">> ");
-		
-		new Thread() {
-			@Override
-			public void run() {
-				String line;
-				Scanner scanner = new Scanner(System.in);
-				while (!(line = scanner.nextLine()).equals("quit")) {
-					
-					if ("RANDOM".equals(line)) {
-						mode = GenerationMode.RANDOM;
-					} else {
-						System.out.println("Invalid mode.");
-					}
-					System.out.print(">> ");
-				}
-				mode = GenerationMode.SHUTDOWN;
-				scanner.close();
-			}
-		}.start();
 		
 		MetricValue value;
 		Random rand = new Random();
