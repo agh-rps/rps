@@ -15,7 +15,7 @@ public class ResourceDAO {
 		
 		@SuppressWarnings("unchecked")
 		List<Resource> resources = session.createCriteria(Resource.class)
-								   .add(Restrictions.eq("system", system.getSystemId()))
+								   .add(Restrictions.eq("system.id", system.getSystemId()))
 								   .list();
 		
 		session.close();

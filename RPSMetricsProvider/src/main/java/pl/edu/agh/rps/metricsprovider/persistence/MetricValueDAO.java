@@ -19,8 +19,8 @@ public class MetricValueDAO {
 		
 		@SuppressWarnings("unchecked")
 		List<MetricValue> values = session.createCriteria(MetricValue.class)
-								   .add(Restrictions.eq("system", system.getSystemId()))
-								   .add(Restrictions.eq("resource", resource.getResourceId()))
+								   .add(Restrictions.eq("system.id", system.getSystemId()))
+								   .add(Restrictions.eq("resource.id", resource.getResourceId()))
 								   .add(Restrictions.between("timestamp", beginTimestamp, endTimestamp))
 								   .list();
 		session.close();
