@@ -20,26 +20,28 @@ public class Test {
 	public static void main(String[] args) {
 		
 		Provider.initialize();
-		new Thread(new Generator()).start();
-		
-		beginTimestamp = new Date();
-	
+		Generator gen1 = new Generator();
+		gen1.setVerbose(true);
+		gen1.start();
+
 		String line;
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("RANDOM/INFO");
 		System.out.println(">> ");
-		while (!(line = scanner.nextLine()).equals("quit")) {
+		while (!(line = scanner.nextLine()).equals("QUIT")) {
 		
-			if ("RANDOM".equals(line)) {
-				Generator.setMode(GenerationMode.RANDOM);
-			} else if ("INFO".equals(line)) {
-				showInfo();
+			if ("VERB".equals(line)) {
+				gen1.setVerbose(true);
+			} else if ("NOVERB".equals(line)) {
+				gen1.setVerbose(false);
+			} else if ("ADDLIN".equals(line)) {
+				gen1.addGeneratedResource(GenerationMode.LINEAR);
+			} else if ("ADDRAN".equals(line)) {
+				gen1.addGeneratedResource(GenerationMode.RANDOM);
 			} else {
-				System.out.println("Invalid mode.");
+				System.out.println("Invalid command.");
 			}
 			System.out.print(">> ");
 		}
-		Generator.setMode(GenerationMode.SHUTDOWN);
 		scanner.close();
 	
 	}
