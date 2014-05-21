@@ -14,9 +14,9 @@ import pl.edu.agh.rps.generator.Generator;
 import pl.edu.agh.rps.metricsprovider.Provider;
 import pl.edu.agh.rps.metricsprovider.model.MetricValue;
 import pl.edu.agh.rps.metricsprovider.model.Resource;
+import weka.classifiers.functions.GaussianProcesses;
 import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.MultilayerPerceptron;
-import weka.classifiers.meta.AdditiveRegression;
 import weka.classifiers.meta.RegressionByDiscretization;
 
 public class WekaTest {
@@ -24,27 +24,32 @@ public class WekaTest {
 	private static Date testDate;
 
 	public static void main(String[] args) {
+		Map<Long, List<MetricValue>> values = prepareData();
+		SimpleApacheRegression regression = new SimpleApacheRegression();
+		regression.setData(values, Generator.FREQUENCY);
 		WekaProvider provider = new WekaProvider();
-		provider.setData(prepareData(), Generator.FREQUENCY);
+		provider.setData(values, Generator.FREQUENCY);
 		DateFormat df = new SimpleDateFormat("HH:mm:ss:SS");
 		try {
-			System.out
-					.println("\n\nLinear regression("
-							+ df.format(testDate)
-							+ "):"
-							+ provider
-									.predict(testDate, new LinearRegression()));
+			Map<Long, Double> predicted = regression.predict(testDate);
+			System.out.print("\n\nApache(" + df.format(testDate) + "):");
+			for (Long id : predicted.keySet()) {
+				System.out.println(predicted.get(id));
+			}
+			provider.addPredictionLine(testDate);
+			System.out.println("\n\nLinear regression(" + df.format(testDate)
+					+ "):" + provider.predict(new LinearRegression()));
 			System.out.println("\n\nRegressionByDiscretization("
-					+ df.format(testDate)
-					+ "):"
-					+ provider.predict(testDate,
-							new RegressionByDiscretization()));
-			System.out.println("\n\nAdditiveRegression(" + df.format(testDate)
-					+ "):"
-					+ provider.predict(testDate, new AdditiveRegression()));
-			System.out.println("\n\nMultilayerPerceptron("
 					+ df.format(testDate) + "):"
-					+ provider.predict(testDate, new MultilayerPerceptron()));
+					+ provider.predict(new RegressionByDiscretization()));
+			System.out.println("\n\nGaussianProcesses(" + df.format(testDate)
+					+ "):" + provider.predict(new GaussianProcesses()));
+			MultilayerPerceptron neural = new MultilayerPerceptron();
+			System.out.println("\n\nMultilayerPerceptron("
+					+ df.format(testDate) + "):" + provider.predict(neural));
+			neural.setLearningRate(0.45);
+			System.out.println("\n\nMultilayerPerceptron+customParameters("
+					+ df.format(testDate) + "):" + provider.predict(neural));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,6 +76,16 @@ public class WekaTest {
 		}
 		endTimestamp = new Date();
 
+		Map<Long, List<MetricValue>> values = new HashMap<Long, List<MetricValue>>();
+
+		for (Resource resource : Provider.getAllSystems().get(0).getResources()) {
+			@SuppressWarnings("unchecked")
+			List<MetricValue> reversed = (List<MetricValue>) ((ArrayList<MetricValue>) resource
+					.getMetricValues(beginTimestamp, endTimestamp)).clone();
+			Collections.reverse(reversed);
+			values.put(resource.getResourceId(), reversed);
+		}
+
 		System.out.println("Waiting some more to get actual value...");
 		try {
 			Thread.sleep(Generator.FREQUENCY * 20);
@@ -89,16 +104,6 @@ public class WekaTest {
 		}
 		gen1.shutdown();
 		testDate = Generator.lastReadingTime;
-
-		Map<Long, List<MetricValue>> values = new HashMap<Long, List<MetricValue>>();
-
-		for (Resource resource : Provider.getAllSystems().get(0).getResources()) {
-			@SuppressWarnings("unchecked")
-			List<MetricValue> reversed = (List<MetricValue>) ((ArrayList<MetricValue>) resource
-					.getMetricValues(beginTimestamp, endTimestamp)).clone();
-			Collections.reverse(reversed);
-			values.put(resource.getResourceId(), reversed);
-		}
 
 		return values;
 	}

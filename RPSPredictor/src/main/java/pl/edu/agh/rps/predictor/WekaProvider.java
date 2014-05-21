@@ -19,14 +19,12 @@ public class WekaProvider {
 
 	Map<Long, Integer> idOrder = new HashMap<Long, Integer>();
 	protected Long startingDate = null;
-	protected int frequency;
 
 	public WekaProvider() {
 		super();
 	}
 
 	public void setData(Map<Long, List<MetricValue>> values, int frequency) {
-		this.frequency = frequency;
 		BufferedWriter bw = null;
 
 		int j = 1;
@@ -55,8 +53,7 @@ public class WekaProvider {
 					if (!timeAdded) {
 						timeAdded = true;
 						sb.append((values.get(resourceId).get(i).getTimestamp()
-								.getTime() - startingDate)
-								/ frequency);
+								.getTime() - startingDate));
 					}
 					sb.append("," + values.get(resourceId).get(i).getValue());
 				}
@@ -78,21 +75,24 @@ public class WekaProvider {
 		}
 	}
 
-	public double predict(Date date, AbstractClassifier classifier)
-			throws Exception {
-		BufferedWriter bw = new BufferedWriter(
-				new FileWriter("test.arff", true));
-		bw.write("\n" + (date.getTime() - startingDate) / frequency + ", ?");
-
+	public double predict(AbstractClassifier classifier) throws Exception {
 		Instances data = new Instances(new BufferedReader(new FileReader(
 				"test.arff")));
 		data.setClassIndex(data.numAttributes() - 1);
 		// build model
 		classifier.buildClassifier(data);
+		// System.out.println(classifier);
 		// classify the last instance
 		Instance result = data.lastInstance();
 
 		return classifier.classifyInstance(result);
+	}
+
+	public void addPredictionLine(Date date) throws IOException {
+		BufferedWriter bw = new BufferedWriter(
+				new FileWriter("test.arff", true));
+		bw.write((date.getTime() - startingDate) + ", ?");
+		bw.close();
 	}
 
 }
