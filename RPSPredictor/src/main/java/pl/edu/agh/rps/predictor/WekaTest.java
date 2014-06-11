@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pl.edu.agh.rps.charts.ChartWindow;
 import pl.edu.agh.rps.generator.GenerationMode;
 import pl.edu.agh.rps.generator.Generator;
 import pl.edu.agh.rps.metricsprovider.Provider;
@@ -62,7 +63,7 @@ public class WekaTest {
 
 		Provider.initialize();
 		Generator gen1 = new Generator();
-		gen1.addGeneratedResource(GenerationMode.LINEAR);
+		gen1.addGeneratedResource(GenerationMode.SINUSOID);
 		// gen1.addGeneratedResource(GenerationMode.SINUSOID);
 		// gen1.addRelatedGeneratedResource(gen1.getGeneratedResources());
 		new Thread(gen1).start();
@@ -85,6 +86,8 @@ public class WekaTest {
 			Collections.reverse(reversed);
 			values.put(resource.getResourceId(), reversed);
 		}
+
+		new ChartWindow(values.get(values.keySet().iterator().next()));
 
 		System.out.println("Waiting some more to get actual value...");
 		try {
