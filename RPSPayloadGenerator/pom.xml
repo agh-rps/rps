@@ -14,5 +14,11 @@
   		<artifactId>RPSMetricsProvider</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+		<groupId>com.outr.javasysmon</groupId>
+		<artifactId>javasysmon_2.10</artifactId>
+		<version>0.3.4</version>
+	</dependency>
+  	
   </dependencies>
 </project>

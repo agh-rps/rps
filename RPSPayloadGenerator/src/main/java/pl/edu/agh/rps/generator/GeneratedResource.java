@@ -8,7 +8,7 @@ import java.util.Random;
 import pl.edu.agh.rps.metricsprovider.model.MetricValue;
 import pl.edu.agh.rps.metricsprovider.model.Resource;
 
-public class GeneratedResource {
+public class GeneratedResource implements IResource {
 
 	private static final double MIN_VALUE = 0.0;
 	private static final double MAX_VALUE = 100.0;
@@ -18,14 +18,14 @@ public class GeneratedResource {
 	private GenerationMode mode;
 	private boolean ascending;
 	private double diff = MIN_VALUE;
-	private List<GeneratedResource> relatedResources;
+	private List<IResource> relatedResources;
 	
 	private static final Random rand = new Random();
 	
 	public GeneratedResource(Resource resource) {
 		this.resource = resource;
 		this.ascending = true;
-		this.relatedResources = new LinkedList<GeneratedResource>();
+		this.relatedResources = new LinkedList<IResource>();
 		this.mode = GenerationMode.RANDOM;
 	}
 	
@@ -37,7 +37,7 @@ public class GeneratedResource {
 		return mode;
 	}
 	
-	public void addRelated(List<GeneratedResource> resources) {
+	public void addRelated(List<IResource> resources) {
 		relatedResources.addAll(resources);
 	}
 	
@@ -55,7 +55,7 @@ public class GeneratedResource {
 		case RELATED:
 			if (!relatedResources.isEmpty()) {
 				double average = 0.0;
-				for (GeneratedResource res : relatedResources) {
+				for (IResource res : relatedResources) {
 					average += res.getCurrentValue();
 				}
 				average /= relatedResources.size();

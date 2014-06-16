@@ -16,17 +16,17 @@ public class Generator extends Thread {
 	public static final int FREQUENCY = 5;
 	private static boolean VERBOSE = false;
 	private final SupervisedSystem system;
-	private final List<GeneratedResource> resources;
+	private final List<IResource> resources;
 	private boolean isRunning = true;
 	public static Date lastReadingTime = null;
 
 	public Generator() {
 		system = new SupervisedSystem();
 		Provider.registerSystem(system);
-		resources = new LinkedList<GeneratedResource>();
+		resources = new LinkedList<IResource>();
 	}
 
-	public List<GeneratedResource> getGeneratedResources() {
+	public List<IResource> getResources() {
 		return resources;
 	}
 
@@ -36,6 +36,14 @@ public class Generator extends Thread {
 
 	public static void setVerbose(boolean verbose) {
 		VERBOSE = verbose;
+	}
+	
+	public void addCpuMonitor() {
+		Resource resource = new Resource(system);
+		Provider.registerResource(resource);
+		
+		CPUUsageMonitor monitor = new CPUUsageMonitor(resource);
+		resources.add(monitor);
 	}
 
 	public void addGeneratedResource(GenerationMode mode) {
@@ -47,7 +55,7 @@ public class Generator extends Thread {
 		resources.add(generated);
 	}
 
-	public void addRelatedGeneratedResource(List<GeneratedResource> related) {
+	public void addRelatedGeneratedResource(List<IResource> related) {
 		Resource resource = new Resource(system);
 		Provider.registerResource(resource);
 
@@ -67,7 +75,7 @@ public class Generator extends Thread {
 			if (VERBOSE) {
 				System.out.print(df.format(lastReadingTime) + " ");
 			}
-			for (GeneratedResource res : resources) {
+			for (IResource res : resources) {
 				Provider.addMetricValue(res.nextValue());
 				if (VERBOSE) {
 					System.out
